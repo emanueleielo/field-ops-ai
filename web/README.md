@@ -48,7 +48,7 @@ components/
 lib/
 ├── supabase/             # Supabase client
 ├── api/                  # API client
-└── utils/
+└── utils.ts
 hooks/                    # Custom React hooks
 types/                    # TypeScript types
 ```
