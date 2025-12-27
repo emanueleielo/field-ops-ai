@@ -23,22 +23,35 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 
 # Run development server
-uv run fastapi dev src/main.py
+uv run uvicorn app.main:app --reload
 ```
 
 ## Project Structure
 
 ```
-src/
-├── api/           # FastAPI routes
-├── core/          # Config, security, dependencies
-├── models/        # SQLAlchemy models
-├── schemas/       # Pydantic schemas
-├── services/      # Business logic
-├── agent/         # LangChain agent & tools
-└── main.py        # Application entry point
+app/
+├── __init__.py
+├── main.py              # Application entry point
+├── config.py            # Settings (pydantic-settings)
+├── api/
+│   ├── v1/
+│   │   ├── router.py
+│   │   ├── endpoints/   # FastAPI routes
+│   │   └── schemas/     # Pydantic schemas
+│   └── webhooks/        # Twilio, Stripe webhooks
+├── core/
+│   ├── security.py
+│   └── exceptions.py
+├── db/
+│   ├── base.py
+│   └── session.py
+├── models/              # SQLAlchemy models
+├── services/            # Business logic
+│   └── tools/           # LangChain agent tools
+└── utils/
 ```
 
 ## Documentation
 
 See `../project.md` for complete specifications.
+See `../tasks.md` for implementation tasks (start with TASK-01).

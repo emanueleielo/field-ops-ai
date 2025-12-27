@@ -26,13 +26,34 @@ npm run dev
 ## Project Structure
 
 ```
-src/
-├── app/           # Next.js App Router pages
-├── components/    # React components
-├── lib/           # Utilities, API client
-└── hooks/         # Custom React hooks
+app/
+├── (auth)/
+│   ├── login/
+│   └── signup/
+├── (dashboard)/
+│   ├── layout.tsx
+│   ├── page.tsx          # Dashboard overview
+│   ├── documents/
+│   ├── analytics/
+│   ├── simulator/
+│   ├── billing/
+│   ├── settings/
+│   └── activity/
+├── layout.tsx
+├── page.tsx              # Landing page
+└── globals.css
+components/
+├── ui/                   # Radix UI components
+└── features/             # Feature-specific components
+lib/
+├── supabase/             # Supabase client
+├── api/                  # API client
+└── utils/
+hooks/                    # Custom React hooks
+types/                    # TypeScript types
 ```
 
 ## Documentation
 
 See `../project.md` for complete specifications.
+See `../tasks.md` for implementation tasks (start with TASK-08).
