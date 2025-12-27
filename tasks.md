@@ -73,16 +73,16 @@
 **Dipendenze**: Nessuna
 
 ### Contesto
-Repository: `field-ops-api`
+Folder: `/api`
 Stack: Python 3.13, FastAPI, SQLAlchemy, uv, Pydantic v2
 Vedi `project.md` sezione 3.4 per dettagli tech stack.
 
 ### Istruzioni
-1. Inizializzare repository Git `field-ops-api`
+1. Setup `/api` folder nel monorepo
 2. Setup `uv` come package manager
 3. Creare struttura cartelle:
    ```
-   field-ops-api/
+   api/
    ├── app/
    │   ├── __init__.py
    │   ├── main.py
@@ -138,7 +138,7 @@ Vedi `project.md` sezione 3.4 per dettagli tech stack.
 10. Setup Alembic per migrations
 
 ### Output Atteso
-- Repository `field-ops-api` con struttura completa
+- Folder `/api` con struttura completa
 - FastAPI app runnable con `uvicorn app.main:app`
 - Endpoint `GET /health` funzionante
 - Ruff e mypy configurati
@@ -576,15 +576,16 @@ send_welcome_sms("+393331234567", lang="it")
 **Dipendenze**: Nessuna (può partire in parallelo dopo TASK-01)
 
 ### Contesto
-Repository: `field-ops-web`
+Folder: `/web`
 Stack: Next.js 14, TypeScript, Tailwind, Radix UI
 Vedi `project.md` sezione 3.3 per dettagli.
 
 ### Istruzioni
-1. Creare repository `field-ops-web`
+1. Setup `/web` folder nel monorepo
 2. Inizializzare Next.js 14 con App Router:
    ```bash
-   npx create-next-app@latest field-ops-web --typescript --tailwind --eslint --app
+   cd web
+   npx create-next-app@latest . --typescript --tailwind --eslint --app
    ```
 3. Installare dipendenze:
    - @radix-ui/react-* (dialog, dropdown, toast, etc.)
@@ -598,7 +599,7 @@ Vedi `project.md` sezione 3.3 per dettagli.
    - clsx, tailwind-merge
 4. Creare struttura cartelle:
    ```
-   field-ops-web/
+   web/
    ├── app/
    │   ├── (auth)/
    │   │   ├── login/
@@ -639,7 +640,7 @@ Vedi `project.md` sezione 3.3 per dettagli.
 9. Creare `lib/utils.ts` con helper `cn()` per classNames
 
 ### Output Atteso
-- Repository Next.js 14 funzionante
+- Folder `/web` Next.js 14 funzionante
 - Struttura App Router con route groups
 - Componenti UI base
 - Design system Tailwind configurato
@@ -1426,7 +1427,7 @@ Platform: Vercel free tier
 URLs: fieldops.ai (landing), app.fieldops.ai (dashboard)
 
 ### Istruzioni
-1. Connettere repo `field-ops-web` a Vercel
+1. Connettere monorepo a Vercel (root: `/web`)
 2. Configurare environment variables:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`

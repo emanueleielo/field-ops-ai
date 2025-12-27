@@ -6,9 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 FieldOps AI is an SMS-based AI assistant for field technicians in Heavy Machinery & Mining. Users send SMS questions and receive AI-powered answers from their uploaded technical manuals.
 
-This repository contains **project specifications and task definitions**. The actual code lives in two separate repositories:
-- `field-ops-api` - FastAPI backend
-- `field-ops-web` - Next.js frontend
+This is a **monorepo** containing:
+- `/api` - FastAPI backend
+- `/web` - Next.js frontend
+- `project.md` - Complete specifications
+- `tasks.md` - Development tasks
 
 ## Key Documentation
 
@@ -23,13 +25,13 @@ This repository contains **project specifications and task definitions**. The ac
 - Format: Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`)
 - **NO Claude Code signatures** (no "Generated with Claude Code", no "Co-Authored-By: Claude")
 
-**Backend (field-ops-api)**:
+**Backend (`/api`)**:
 - Python 3.13, FastAPI, SQLAlchemy, uv
 - Linting: Ruff
 - Type checking: mypy (strict)
 - Naming: snake_case
 
-**Frontend (field-ops-web)**:
+**Frontend (`/web`)**:
 - Next.js 14 (App Router), TypeScript strict
 - Linting: ESLint + Prettier
 - Naming: camelCase (variables/functions), PascalCase (components)

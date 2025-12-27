@@ -125,9 +125,11 @@ percentuale_mostrata = (quota_usata_euro / quota_totale_euro) * 100
 
 ### 3.2 Repository Structure
 
-**Due repository separate**:
-- `field-ops-api` - Backend FastAPI
-- `field-ops-web` - Frontend Next.js
+**Monorepo** `field-ops-ai`:
+- `/api` - Backend FastAPI
+- `/web` - Frontend Next.js
+- `project.md` - Specifiche complete
+- `tasks.md` - Task di sviluppo
 
 ### 3.3 Frontend (Next.js 14 + App Router)
 
@@ -666,7 +668,7 @@ No staging environment per MVP.
 
 ### Week 1: Core Backend + AI Engine
 
-- [ ] Setup `field-ops-api` repo (FastAPI + uv + SQLAlchemy)
+- [ ] Setup `/api` (FastAPI + uv + SQLAlchemy)
 - [ ] Supabase setup (Postgres + Auth + Storage)
 - [ ] Qdrant Cloud setup
 - [ ] Twilio account setup
@@ -676,7 +678,7 @@ No staging environment per MVP.
 
 ### Week 2: Document Processing + Frontend
 
-- [ ] Setup `field-ops-web` repo (Next.js 14 + App Router)
+- [ ] Setup `/web` (Next.js 14 + App Router)
 - [ ] File upload + validation + Supabase Storage
 - [ ] Text extraction (pypdf, python-docx, pandas)
 - [ ] Chunking + embedding + Qdrant indexing
