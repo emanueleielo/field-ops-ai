@@ -3,7 +3,7 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field, computed_field
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -65,6 +65,10 @@ class Settings(BaseSettings):
 
     stripe_secret_key: str | None = Field(default=None)
     stripe_webhook_secret: str | None = Field(default=None)
+
+    # Supabase Storage
+    supabase_url: str | None = Field(default=None)
+    supabase_key: str | None = Field(default=None)
 
 
 @lru_cache

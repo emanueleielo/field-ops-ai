@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "date": "2025-01-15",
+  "title": "Welcome to FieldOps AI",
+  "changes": [
+    {
+      "type": "feature",
+      "text": "Initial release of FieldOps AI"
+    },
+    {
+      "type": "feature",
+      "text": "Document upload and AI-powered indexing"
+    },
+    {
+      "type": "feature",
+      "text": "SMS-based AI assistant for field technicians"
+    },
+    {
+      "type": "feature",
+      "text": "Real-time analytics dashboard"
+    },
+    {
+      "type": "feature",
+      "text": "Chat simulator for testing AI responses"
+    },
+    {
+      "type": "improvement",
+      "text": "Support for PDF, DOCX, TXT, and spreadsheet formats"
+    },
+    {
+      "type": "improvement",
+      "text": "Multi-language document support"
+    }
+  ]
+}

@@ -113,6 +113,42 @@ class RateLimitException(AppException):
         )
 
 
+class ConflictException(AppException):
+    """Conflict exception for duplicate resources."""
+
+    def __init__(
+        self,
+        detail: str = "Resource already exists",
+        instance: str | None = None,
+    ) -> None:
+        """Initialize conflict exception."""
+        super().__init__(
+            status_code=status.HTTP_409_CONFLICT,
+            error_type="https://api.fieldops.ai/errors/conflict",
+            title="Conflict",
+            detail=detail,
+            instance=instance,
+        )
+
+
+class ForbiddenException(AppException):
+    """Forbidden exception for access denied."""
+
+    def __init__(
+        self,
+        detail: str = "Access denied",
+        instance: str | None = None,
+    ) -> None:
+        """Initialize forbidden exception."""
+        super().__init__(
+            status_code=status.HTTP_403_FORBIDDEN,
+            error_type="https://api.fieldops.ai/errors/forbidden",
+            title="Forbidden",
+            detail=detail,
+            instance=instance,
+        )
+
+
 async def app_exception_handler(
     _request: Request,
     exc: AppException,

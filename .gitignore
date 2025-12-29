@@ -18,6 +18,7 @@ node_modules/
 .next/
 .turbo/
 
+twilio_2FA_recovery_code.txt
 # OS
 .DS_Store
 Thumbs.db
