@@ -1,33 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/client";
+import { useAuth, type AuthUser } from "@/lib/auth";
 
-export function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
-    };
-
-    getUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase.auth]);
-
-  return { user, loading };
+/**
+ * Hook to get current user. Uses the AuthProvider context.
+ * This is a compatibility wrapper around useAuth.
+ */
+export function useUser(): { user: AuthUser | null; loading: boolean } {
+  const { user, isLoading } = useAuth();
+  return { user, loading: isLoading };
 }

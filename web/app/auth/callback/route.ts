@@ -1,18 +1,17 @@
-import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
+/**
+ * OAuth callback route.
+ *
+ * Note: OAuth is not supported in the backend-proxy architecture.
+ * This route exists only to handle any lingering OAuth redirects
+ * and redirect users to the login page with an error.
+ */
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const { origin } = new URL(request.url);
 
-  if (code) {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
-    }
-  }
-
-  return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+  // OAuth is not supported - redirect to login with error
+  return NextResponse.redirect(
+    `${origin}/login?error=OAuth is not supported. Please use email and password.`
+  );
 }

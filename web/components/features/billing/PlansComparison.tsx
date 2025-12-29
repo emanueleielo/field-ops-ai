@@ -76,7 +76,17 @@ const FEATURES: PlanFeature[] = [
   },
 ];
 
-const PLANS = {
+interface PlanConfig {
+  name: string;
+  icon: typeof Sparkles;
+  description: string;
+  monthlyPrice: number;
+  yearlyPrice: number;
+  color: string;
+  popular?: boolean;
+}
+
+const PLANS: Record<PlanTier, PlanConfig> = {
   basic: {
     name: "Basic",
     icon: Sparkles,

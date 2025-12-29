@@ -23,6 +23,11 @@ from app.services.quota import QuotaService, QuotaServiceError, QuotaStatus
 from app.services.sms import SMSService, SMSServiceError, get_sms_service
 from app.services.sms_handler import SMSHandler, SMSHandlerError
 from app.services.storage import StorageError, StorageService
+from app.services.supabase_client import (
+    SupabaseClientError,
+    get_supabase_admin_client,
+    get_supabase_client,
+)
 from app.services.vector_store import VectorStoreError, VectorStoreService
 from app.services.welcome import (
     WelcomeService,
@@ -56,7 +61,10 @@ __all__ = [
     "SMSServiceError",
     "StorageError",
     "StorageService",
+    "SupabaseClientError",
     "ValidationResult",
+    "get_supabase_admin_client",
+    "get_supabase_client",
     "VectorStoreError",
     "VectorStoreService",
     "WelcomeService",

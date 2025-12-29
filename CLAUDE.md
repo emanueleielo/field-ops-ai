@@ -40,10 +40,15 @@ This is a **monorepo** containing:
 
 ```
 Frontend (Next.js) → Backend (FastAPI) → Supabase Postgres
+                                       → Supabase Auth (via backend proxy)
+                                       → Supabase Storage (via backend proxy)
                                        → Qdrant (vectors)
                                        → Twilio (SMS)
                                        → LangChain Agent (Claude Haiku → GPT-4o-mini → Gemini Flash)
 ```
+
+**Auth**: Supabase Auth via backend proxy. Frontend calls `/api/v1/auth/*` endpoints.
+No Supabase SDK in frontend. All Supabase credentials are stored only in backend `.env`.
 
 **AI Engine**: LangChain ReAct agent with 4 tools:
 - `semantic_search` - Vector search in Qdrant
@@ -67,3 +72,22 @@ Key endpoints:
 - `POST /webhooks/twilio/sms` - SMS webhook
 - `GET /api/v1/quota` - Quota status
 - `GET /api/v1/analytics` - Usage analytics
+
+## Admin Panel
+
+Single admin account created via migration seed. Routes at `/admin/*`.
+
+Key admin endpoints:
+- `POST /api/v1/admin/login` - Admin authentication
+- `GET /api/v1/admin/dashboard` - Business & technical KPIs
+- `GET /api/v1/admin/users` - User management
+- `POST /api/v1/admin/users/:id/impersonate` - Session takeover
+- `GET /api/v1/admin/config/tiers` - Pricing configuration (editable)
+- `GET /api/v1/admin/health` - Service status monitoring
+
+**Admin Features**:
+- Full user management (edit tier, quota, disable, delete)
+- Session takeover (login as user)
+- Pricing/tier configuration from database
+- System health monitoring (Qdrant, Twilio, LLMs)
+- In-app notifications (no email alerts)

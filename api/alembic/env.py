@@ -14,12 +14,16 @@ from app.db.base import Base
 # Import all models to register them with Base.metadata
 from app.models import (  # noqa: F401
     ActivityLog,
+    Admin,
+    AdminNotification,
     ConversationState,
     Document,
+    ImpersonationSession,
     Message,
     Organization,
     PhoneNumber,
     QuotaNotification,
+    TierConfig,
 )
 
 # this is the Alembic Config object, which provides

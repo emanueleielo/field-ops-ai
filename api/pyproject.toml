@@ -29,6 +29,8 @@ dependencies = [
     "python-slugify>=8.0.0",
     "python-multipart>=0.0.12",
     "twilio>=9.0.0",
+    "PyJWT>=2.8.0",
+    "greenlet>=3.3.0",
 ]
 
 [project.optional-dependencies]
@@ -117,6 +119,8 @@ module = [
     "openpyxl.*",
     "slugify.*",
     "twilio.*",
+    "passlib.*",
+    "jwt.*",
 ]
 ignore_missing_imports = true
 

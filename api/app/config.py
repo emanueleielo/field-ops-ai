@@ -48,6 +48,11 @@ class Settings(BaseSettings):
     )
     api_key_header: str = Field(default="X-API-Key")
 
+    # Supabase
+    supabase_url: str | None = Field(default=None)
+    supabase_key: str | None = Field(default=None)
+    supabase_jwt_secret: str | None = Field(default=None)
+
     # CORS
     cors_origins: list[str] = Field(default=["http://localhost:3000"])
 
@@ -66,9 +71,6 @@ class Settings(BaseSettings):
     stripe_secret_key: str | None = Field(default=None)
     stripe_webhook_secret: str | None = Field(default=None)
 
-    # Supabase Storage
-    supabase_url: str | None = Field(default=None)
-    supabase_key: str | None = Field(default=None)
 
 
 @lru_cache

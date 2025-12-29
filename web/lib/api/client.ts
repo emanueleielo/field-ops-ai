@@ -1,6 +1,7 @@
-import { createClient } from "@/lib/supabase/client";
+import { getAccessToken, refreshToken, clearAuthData } from "@/lib/auth/client";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface ApiError {
   detail: string;
@@ -15,17 +16,13 @@ class ApiClient {
   }
 
   private async getAuthHeaders(): Promise<Record<string, string>> {
-    const supabase = createClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
 
-    if (session?.access_token) {
-      headers["Authorization"] = `Bearer ${session.access_token}`;
+    const token = getAccessToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
     }
 
     return headers;
@@ -33,6 +30,16 @@ class ApiClient {
 
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
+      // Handle 401 by trying to refresh token
+      if (response.status === 401) {
+        try {
+          await refreshToken();
+          // Caller should retry the request
+        } catch {
+          clearAuthData();
+        }
+      }
+
       let error: ApiError;
       try {
         const data = await response.json();
@@ -110,10 +117,7 @@ class ApiClient {
     file: File,
     onProgress?: (progress: number) => void
   ): Promise<T> {
-    const supabase = createClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const token = getAccessToken();
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -151,8 +155,8 @@ class ApiClient {
 
       xhr.open("POST", `${this.baseUrl}${endpoint}`);
 
-      if (session?.access_token) {
-        xhr.setRequestHeader("Authorization", `Bearer ${session.access_token}`);
+      if (token) {
+        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
       }
 
       xhr.send(formData);

@@ -149,6 +149,24 @@ class ForbiddenException(AppException):
         )
 
 
+class UnauthorizedException(AppException):
+    """Unauthorized exception for authentication failures."""
+
+    def __init__(
+        self,
+        detail: str = "Authentication required",
+        instance: str | None = None,
+    ) -> None:
+        """Initialize unauthorized exception."""
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            error_type="https://api.fieldops.ai/errors/unauthorized",
+            title="Unauthorized",
+            detail=detail,
+            instance=instance,
+        )
+
+
 async def app_exception_handler(
     _request: Request,
     exc: AppException,

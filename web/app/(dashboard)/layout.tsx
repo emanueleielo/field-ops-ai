@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   HardHat,
   LayoutDashboard,
@@ -17,12 +17,20 @@ import {
   LogOut,
   ChevronRight,
   Sparkles,
+  Shield,
+  XCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/hooks/useUser";
 import { signOut } from "@/lib/auth/actions";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 import { ChangelogProvider, useChangelog } from "@/components/features/changelog";
+import {
+  getImpersonationSession,
+  clearImpersonationSession,
+  getOriginalAdminToken,
+  ImpersonationSession,
+} from "@/lib/api/admin-client";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -178,6 +186,41 @@ function WhatsNewButton() {
   );
 }
 
+/**
+ * Impersonation banner shown when admin is viewing as a user
+ */
+function ImpersonationBanner({
+  session,
+  onExit,
+}: {
+  session: ImpersonationSession;
+  onExit: () => void;
+}) {
+  return (
+    <div className="bg-warning-500 text-white px-4 py-2">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Shield className="w-5 h-5" />
+          <span className="text-sm font-medium">
+            Impersonating: <strong>{session.userEmail}</strong>
+          </span>
+          <span className="text-xs opacity-75">
+            Session expires:{" "}
+            {new Date(session.expiresAt).toLocaleTimeString()}
+          </span>
+        </div>
+        <button
+          onClick={onExit}
+          className="flex items-center gap-2 px-3 py-1 bg-white/20 hover:bg-white/30 rounded text-sm font-medium transition-colors"
+        >
+          <XCircle className="w-4 h-4" />
+          Exit Impersonation
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Header({ onMenuClick }: { onMenuClick: () => void }) {
   const pathname = usePathname();
 
@@ -229,7 +272,43 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [impersonationSession, setImpersonationSession] =
+    useState<ImpersonationSession | null>(null);
+
+  // Check for impersonation session on mount
+  useEffect(() => {
+    const session = getImpersonationSession();
+    if (session) {
+      // Check if session has expired
+      const expiresAt = new Date(session.expiresAt);
+      if (expiresAt <= new Date()) {
+        // Session expired, clean up
+        clearImpersonationSession();
+        localStorage.removeItem("impersonation_token");
+      } else {
+        setImpersonationSession(session);
+      }
+    }
+  }, []);
+
+  const handleExitImpersonation = () => {
+    // Restore admin token
+    const adminToken = getOriginalAdminToken();
+    if (adminToken) {
+      // Store the admin token back
+      localStorage.setItem("admin_token", adminToken);
+    }
+
+    // Clear impersonation session data
+    clearImpersonationSession();
+    localStorage.removeItem("impersonation_token");
+    setImpersonationSession(null);
+
+    // Redirect to admin panel
+    router.push("/admin/users");
+  };
 
   return (
     <QueryProvider>
@@ -241,6 +320,14 @@ export default function DashboardLayout({
           />
 
           <div className="flex-1 flex flex-col min-w-0">
+            {/* Impersonation Banner */}
+            {impersonationSession && (
+              <ImpersonationBanner
+                session={impersonationSession}
+                onExit={handleExitImpersonation}
+              />
+            )}
+
             <Header onMenuClick={() => setSidebarOpen(true)} />
 
             <main className="flex-1 p-4 lg:p-8 overflow-auto scrollbar-industrial">

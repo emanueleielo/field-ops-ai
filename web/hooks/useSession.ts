@@ -1,39 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/client";
+import { useAuth, type AuthSession } from "@/lib/auth";
 
-export function useSession() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+/**
+ * Hook to get current session. Uses the AuthProvider context.
+ * This is a compatibility wrapper around useAuth.
+ *
+ * Note: In the new auth architecture, session data is stored in localStorage
+ * and managed by the AuthProvider. This hook provides compatibility with
+ * components that expected the old Supabase session format.
+ */
+export function useSession(): { session: AuthSession | null; loading: boolean } {
+  const { isLoading, isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    const supabase = createClient();
+  // In the new architecture, we don't have a full session object like Supabase
+  // We return a minimal session-like object for compatibility
+  const session: AuthSession | null = isAuthenticated
+    ? {
+        access_token: "", // Token is managed internally by auth client
+        refresh_token: "",
+        token_type: "bearer",
+        expires_in: 0,
+        expires_at: 0,
+      }
+    : null;
 
-    // Get initial session
-    const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-      setLoading(false);
-    };
-
-    getSession();
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setLoading(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  return { session, loading };
+  return { session, loading: isLoading };
 }

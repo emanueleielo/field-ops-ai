@@ -6,6 +6,46 @@
 
 ---
 
+## 📊 Stato Avanzamento
+
+**Ultimo aggiornamento**: 2025-12-29
+
+| Fase | Task | Stato |
+|------|------|-------|
+| **Backend Core** | TASK-01: Setup Repository Backend | ✅ Completato |
+| | TASK-02: Setup Database Models | ✅ Completato |
+| | TASK-03: Setup Qdrant Embedding | ✅ Completato |
+| | TASK-04: LangChain Agent | ✅ Completato |
+| | TASK-05: Document Processing | ✅ Completato |
+| | TASK-06: SMS Handler | ✅ Completato |
+| | TASK-07: Welcome SMS | ✅ Completato |
+| **Frontend** | TASK-08: Setup Frontend | ✅ Completato |
+| | TASK-09: Supabase Auth | ✅ Completato |
+| | TASK-10: Dashboard | ✅ Completato |
+| | TASK-11: Documents Page | ✅ Completato |
+| | TASK-12: Analytics Page | ✅ Completato |
+| | TASK-13: Chat Simulator | ✅ Completato |
+| | TASK-14: Activity Page | ✅ Completato |
+| | TASK-15: Settings Page | ✅ Completato |
+| | TASK-16: Billing Page | ✅ Completato |
+| | TASK-17: Changelog | ✅ Completato |
+| **Backend Avanzato** | TASK-18: Quota System | ✅ Completato |
+| | TASK-19: Data Export GDPR | ✅ Completato |
+| **Marketing** | TASK-20: Landing Page | ✅ Completato |
+| | TASK-21: Legal Pages | ✅ Completato |
+| **Deploy** | TASK-22: Deploy Backend (Render) | ⏳ Da fare |
+| | TASK-23: Deploy Frontend (Vercel) | ⏳ Da fare |
+| | TASK-24: Testing End-to-End | ⏳ Da fare |
+| **Refactoring** | TASK-R1: Supabase Auth/Storage via Backend Proxy | ⏳ Da fare |
+| **Admin Panel** | TASK-25: Admin Backend (Models + API) | ✅ Completato |
+| | TASK-26: Admin Frontend (Dashboard) | ✅ Completato |
+| | TASK-27: Admin User Management | ✅ Completato |
+| | TASK-28: Admin Config & Health | ✅ Completato |
+
+**Progresso totale**: 25/29 task completati (86%)
+
+---
+
 ## ⚠️ Regole Globali per TUTTI i Task
 
 **IMPORTANTE**: Queste regole si applicano a OGNI task:
@@ -52,8 +92,8 @@
 - [Funzionalità implementate]
 
 ### Criteri di Accettazione
-- [ ] [Criterio 1]
-- [ ] [Criterio 2]
+- [x] [Criterio 1]
+- [x] [Criterio 2]
 ...
 
 ### Test
@@ -145,11 +185,11 @@ Vedi `project.md` sezione 3.4 per dettagli tech stack.
 - Alembic inizializzato
 
 ### Criteri di Accettazione
-- [ ] `uv run uvicorn app.main:app` avvia il server senza errori
-- [ ] `GET /health` ritorna `{"status": "healthy"}`
-- [ ] `uv run ruff check .` passa senza errori
-- [ ] `uv run mypy .` passa senza errori
-- [ ] Struttura cartelle rispetta lo schema sopra
+- [x] `uv run uvicorn app.main:app` avvia il server senza errori
+- [x] `GET /health` ritorna `{"status": "healthy"}`
+- [x] `uv run ruff check .` passa senza errori
+- [x] `uv run mypy .` passa senza errori
+- [x] Struttura cartelle rispetta lo schema sopra
 
 ### Test
 ```bash
@@ -203,11 +243,11 @@ Vedi `project.md` sezione 3.6 per schema completo dei modelli.
 - Script per inizializzare database
 
 ### Criteri di Accettazione
-- [ ] Tutti i modelli definiti secondo schema in project.md
-- [ ] `alembic upgrade head` esegue senza errori
-- [ ] Relazioni FK definite correttamente
-- [ ] Type hints completi su tutti i modelli
-- [ ] Enums definiti per tutti i campi con valori limitati
+- [x] Tutti i modelli definiti secondo schema in project.md
+- [x] `alembic upgrade head` esegue senza errori
+- [x] Relazioni FK definite correttamente
+- [x] Type hints completi su tutti i modelli
+- [x] Enums definiti per tutti i campi con valori limitati
 
 ### Test
 ```bash
@@ -275,11 +315,11 @@ Vedi `project.md` sezione 3.7 per collection schema.
 - Script inizializzazione
 
 ### Criteri di Accettazione
-- [ ] `embed_text()` ritorna vettore 1536 dimensioni
-- [ ] `upsert_chunks()` salva correttamente su Qdrant
-- [ ] `search()` filtra per org_id
-- [ ] `delete_document()` rimuove tutti i chunk di un documento
-- [ ] Gestione errori per rate limiting e connection errors
+- [x] `embed_text()` ritorna vettore 1536 dimensioni
+- [x] `upsert_chunks()` salva correttamente su Qdrant
+- [x] `search()` filtra per org_id
+- [x] `delete_document()` rimuove tutti i chunk di un documento
+- [x] Gestione errori per rate limiting e connection errors
 
 ### Test
 ```python
@@ -346,12 +386,12 @@ Vedi `project.md` sezione 3.5 per dettagli.
 - System prompt ottimizzato per risposte brevi
 
 ### Criteri di Accettazione
-- [ ] Agent risponde a query usando i tools appropriati
-- [ ] Fallback funziona se Claude non disponibile
-- [ ] Risposte tendono a essere < 160 caratteri
-- [ ] Conversation history mantenuta tra chiamate
-- [ ] Timeout 360s implementato
-- [ ] Tracking modello usato per ogni query
+- [x] Agent risponde a query usando i tools appropriati
+- [x] Fallback funziona se Claude non disponibile
+- [x] Risposte tendono a essere < 160 caratteri
+- [x] Conversation history mantenuta tra chiamate
+- [x] Timeout 360s implementato
+- [x] Tracking modello usato per ogni query
 
 ### Test
 ```python
@@ -422,12 +462,12 @@ Vedi `project.md` sezione 4 per dettagli pipeline.
 - Background processing
 
 ### Criteri di Accettazione
-- [ ] Upload PDF → estrazione testo → chunking → embedding → Qdrant
-- [ ] Duplicate detection via hash SHA256
-- [ ] Filename slugificato correttamente
-- [ ] Limiti tier enforced (50MB storage per BASIC)
-- [ ] Status aggiornato correttamente (processing → indexed/failed)
-- [ ] DELETE rimuove file da Storage e chunks da Qdrant
+- [x] Upload PDF → estrazione testo → chunking → embedding → Qdrant
+- [x] Duplicate detection via hash SHA256
+- [x] Filename slugificato correttamente
+- [x] Limiti tier enforced (50MB storage per BASIC)
+- [x] Status aggiornato correttamente (processing → indexed/failed)
+- [x] DELETE rimuove file da Storage e chunks da Qdrant
 
 ### Test
 ```bash
@@ -495,13 +535,13 @@ Vedi `project.md` sezione 5 per comportamenti SMS.
 - Burst protection
 
 ### Criteri di Accettazione
-- [ ] SMS in arrivo → risposta AI in < 360s
-- [ ] Numeri non registrati ignorati silenziosamente
-- [ ] Messaggi > 160 char splittati correttamente
-- [ ] Caratteri non-GSM7 rimossi/sostituiti
-- [ ] Avvisi quota aggiunti a 90%, 100%
-- [ ] Blocco a 110% con SMS una tantum
-- [ ] Burst protection 50/ora funzionante
+- [x] SMS in arrivo → risposta AI in < 360s
+- [x] Numeri non registrati ignorati silenziosamente
+- [x] Messaggi > 160 char splittati correttamente
+- [x] Caratteri non-GSM7 rimossi/sostituiti
+- [x] Avvisi quota aggiunti a 90%, 100%
+- [x] Blocco a 110% con SMS una tantum
+- [x] Burst protection 50/ora funzionante
 
 ### Test
 ```bash
@@ -550,10 +590,10 @@ Vedi `project.md` sezione 5.3 per testo welcome.
 - Risposte multilingua
 
 ### Criteri di Accettazione
-- [ ] Nuovo numero → riceve welcome SMS automaticamente
-- [ ] Welcome SMS in lingua appropriata
-- [ ] Conversazione mantiene contesto ultimi 5 messaggi
-- [ ] Messaggi sistema tradotti (EN, DE, FR, IT, ES)
+- [x] Nuovo numero → riceve welcome SMS automaticamente
+- [x] Welcome SMS in lingua appropriata
+- [x] Conversazione mantiene contesto ultimi 5 messaggi
+- [x] Messaggi sistema tradotti (EN, DE, FR, IT, ES)
 
 ### Test
 ```python
@@ -646,11 +686,11 @@ Vedi `project.md` sezione 3.3 per dettagli.
 - Design system Tailwind configurato
 
 ### Criteri di Accettazione
-- [ ] `npm run dev` avvia senza errori
-- [ ] `npm run build` compila senza errori
-- [ ] `npm run lint` passa
-- [ ] Struttura cartelle rispetta schema
-- [ ] Componenti UI base funzionanti
+- [x] `npm run dev` avvia senza errori
+- [x] `npm run build` compila senza errori
+- [x] `npm run lint` passa
+- [x] Struttura cartelle rispetta schema
+- [x] Componenti UI base funzionanti
 
 ### Test
 ```bash
@@ -699,12 +739,12 @@ Vedi `project.md` sezione 3.6 e 6.1.
 - Protected routes
 
 ### Criteri di Accettazione
-- [ ] Signup crea utente e organizzazione
-- [ ] Login funziona con email/password
-- [ ] Google SSO funziona
-- [ ] Routes dashboard protette (redirect a login)
-- [ ] Logout funziona
-- [ ] Password validation (8+, mixed case, number)
+- [x] Signup crea utente e organizzazione
+- [x] Login funziona con email/password
+- [x] Google SSO funziona
+- [x] Routes dashboard protette (redirect a login)
+- [x] Logout funziona
+- [x] Password validation (8+, mixed case, number)
 
 ### Test
 ```
@@ -765,11 +805,11 @@ Solo Light Mode.
 - API client configurato
 
 ### Criteri di Accettazione
-- [ ] Layout responsive (mobile: hamburger menu)
-- [ ] Sidebar evidenzia pagina corrente
-- [ ] Overview mostra dati reali da API
-- [ ] Quota progress bar funzionante
-- [ ] User menu con logout
+- [x] Layout responsive (mobile: hamburger menu)
+- [x] Sidebar evidenzia pagina corrente
+- [x] Overview mostra dati reali da API
+- [x] Quota progress bar funzionante
+- [x] User menu con logout
 
 ### Test
 ```
@@ -823,13 +863,13 @@ Popup per file duplicati: "Sostituire o mantenere?"
 - Gestione duplicati
 
 ### Criteri di Accettazione
-- [ ] Drag & drop file funziona
-- [ ] Validazione tipo file client-side
-- [ ] Progress bar durante upload
-- [ ] Status aggiornato durante processing
-- [ ] Delete con dialog conferma
-- [ ] Duplicate detection con dialog scelta
-- [ ] Badge status colorati (verde=indexed, giallo=processing, rosso=failed)
+- [x] Drag & drop file funziona
+- [x] Validazione tipo file client-side
+- [x] Progress bar durante upload
+- [x] Status aggiornato durante processing
+- [x] Delete con dialog conferma
+- [x] Duplicate detection con dialog scelta
+- [x] Badge status colorati (verde=indexed, giallo=processing, rosso=failed)
 
 ### Test
 ```
@@ -881,11 +921,11 @@ Vedi `project.md` sezione 6.1.
 - Export CSV funzionante
 
 ### Criteri di Accettazione
-- [ ] Tutte le metriche visualizzate
-- [ ] Trend chart con dati reali
-- [ ] Date range selector funzionante
-- [ ] Export CSV scarica file corretto
-- [ ] Responsive layout
+- [x] Tutte le metriche visualizzate
+- [x] Trend chart con dati reali
+- [x] Date range selector funzionante
+- [x] Export CSV scarica file corretto
+- [x] Responsive layout
 
 ### Test
 ```
@@ -938,12 +978,12 @@ Vedi `project.md` sezione 3.3.
 - Metadata risposta visibili
 
 ### Criteri di Accettazione
-- [ ] Invio messaggio → risposta AI
-- [ ] Loading state durante attesa
-- [ ] Counter "X messaggi gratuiti rimanenti"
-- [ ] Warning dopo 10 messaggi
-- [ ] Metadata visibili (tools, tempo, modello)
-- [ ] Scroll automatico
+- [x] Invio messaggio → risposta AI
+- [x] Loading state durante attesa
+- [x] Counter "X messaggi gratuiti rimanenti"
+- [x] Warning dopo 10 messaggi
+- [x] Metadata visibili (tools, tempo, modello)
+- [x] Scroll automatico
 
 ### Test
 ```
@@ -987,11 +1027,11 @@ Vedi `project.md` sezione 6.3.
 - Filtri per tipo
 
 ### Criteri di Accettazione
-- [ ] Lista eventi ordinata per data desc
-- [ ] Infinite scroll carica più eventi
-- [ ] Filtro per tipo funzionante
-- [ ] Timestamp relativi
-- [ ] Icon appropriate per tipo evento
+- [x] Lista eventi ordinata per data desc
+- [x] Infinite scroll carica più eventi
+- [x] Filtro per tipo funzionante
+- [x] Timestamp relativi
+- [x] Icon appropriate per tipo evento
 
 ### Test
 ```
@@ -1039,11 +1079,11 @@ Delete: Immediato con conferma UI.
 - Delete account funzionante
 
 ### Criteri di Accettazione
-- [ ] Update profilo funziona
-- [ ] Cambio password con validazione
-- [ ] Numeri telefono: add/remove (Enterprise only)
-- [ ] Delete account con conferma
-- [ ] Sezioni appropriate per tier
+- [x] Update profilo funziona
+- [x] Cambio password con validazione
+- [x] Numeri telefono: add/remove (Enterprise only)
+- [x] Delete account con conferma
+- [x] Sezioni appropriate per tier
 
 ### Test
 ```
@@ -1092,11 +1132,11 @@ Vedi `project.md` sezione 2 per pricing.
 - Upgrade/downgrade via Customer Portal
 
 ### Criteri di Accettazione
-- [ ] Piano corrente mostrato correttamente
-- [ ] Click "Manage Subscription" → Stripe Portal
-- [ ] Upgrade/downgrade funziona
-- [ ] Webhook aggiorna subscription in DB
-- [ ] Fatture visibili
+- [x] Piano corrente mostrato correttamente
+- [x] Click "Manage Subscription" → Stripe Portal
+- [x] Upgrade/downgrade funziona
+- [x] Webhook aggiorna subscription in DB
+- [x] Fatture visibili
 
 ### Test
 ```
@@ -1147,10 +1187,10 @@ Dismiss: Utente può chiudere, non riappare fino a nuovo update
 - Persistence dismiss in localStorage
 
 ### Criteri di Accettazione
-- [ ] Modal appare per nuove versioni
-- [ ] Dismiss salva preferenza
-- [ ] Non riappare dopo dismiss
-- [ ] Design coerente con UI
+- [x] Modal appare per nuove versioni
+- [x] Dismiss salva preferenza
+- [x] Non riappare dopo dismiss
+- [x] Design coerente con UI
 
 ### Test
 ```
@@ -1207,11 +1247,11 @@ Reset: Mezzanotte billing day
 - Notifiche quota
 
 ### Criteri di Accettazione
-- [ ] Ogni query traccia tokens e costo
-- [ ] Burst limit 50/ora enforced
-- [ ] Notifiche 90%, 100% aggiunte a SMS
-- [ ] Blocco a 110% con SMS una tantum
-- [ ] Reset giornaliero per billing day
+- [x] Ogni query traccia tokens e costo
+- [x] Burst limit 50/ora enforced
+- [x] Notifiche 90%, 100% aggiunte a SMS
+- [x] Blocco a 110% con SMS una tantum
+- [x] Reset giornaliero per billing day
 
 ### Test
 ```python
@@ -1252,10 +1292,10 @@ Include: Profilo, documenti metadata, analytics aggregate
 - JSON con tutti i dati utente
 
 ### Criteri di Accettazione
-- [ ] Export include tutti i dati richiesti
-- [ ] File JSON valido
-- [ ] Download funziona
-- [ ] No PII di altri utenti incluso
+- [x] Export include tutti i dati richiesti
+- [x] File JSON valido
+- [x] Download funziona
+- [x] No PII di altri utenti incluso
 
 ### Test
 ```
@@ -1302,12 +1342,12 @@ Vedi `project.md` sezione 10.2.
 - Pricing table
 
 ### Criteri di Accettazione
-- [ ] Hero con value proposition chiara
-- [ ] How it works in 3 step
-- [ ] Pricing table con tutti i tier
-- [ ] FAQ funzionante (accordion)
-- [ ] CTA linkato a signup
-- [ ] Mobile responsive
+- [x] Hero con value proposition chiara
+- [x] How it works in 3 step
+- [x] Pricing table con tutti i tier
+- [x] FAQ funzionante (accordion)
+- [x] CTA linkato a signup
+- [x] Mobile responsive
 
 ### Test
 ```
@@ -1345,10 +1385,10 @@ Contenuto: Da template standard + personalizzazioni
 - Terms of Service page
 
 ### Criteri di Accettazione
-- [ ] Privacy Policy presente e personalizzata
-- [ ] Terms of Service presenti e personalizzati
-- [ ] Link funzionanti da footer
-- [ ] Disclaimer AI incluso
+- [x] Privacy Policy presente e personalizzata
+- [x] Terms of Service presenti e personalizzati
+- [x] Link funzionanti da footer
+- [x] Disclaimer AI incluso
 
 ### Test
 ```
@@ -1356,6 +1396,114 @@ Contenuto: Da template standard + personalizzazioni
 2. Verificare contenuto
 3. Navigare a /terms
 4. Verificare contenuto
+```
+
+---
+
+## TASK-R1: Supabase Auth/Storage via Backend Proxy
+
+**Obiettivo**: Route all Supabase Auth and Storage calls through the backend. Frontend has NO Supabase SDK - only calls backend API.
+**Tempo stimato**: 6 ore
+**Dipendenze**: TASK-09 (da refactorare)
+
+### Contesto
+Currently the frontend calls Supabase directly for authentication.
+This requires Supabase credentials in the frontend, which is not ideal for security and simplicity.
+
+**New approach**: All Supabase operations are proxied through the backend:
+- Auth: Backend proxies to Supabase Auth using Admin SDK
+- Storage: Backend proxies to Supabase Storage using Admin SDK
+- Frontend: Only calls backend API endpoints (`/api/v1/auth/*`, `/api/v1/documents/*`)
+- Credentials: Only in backend `.env` (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+### Istruzioni
+
+#### Backend (`/api`)
+1. Install Supabase Admin SDK:
+   - Add `supabase` to dependencies (already present)
+   - Configure with service role key for admin operations
+2. Create `app/services/supabase_auth.py`:
+   - `sign_up(email, password)` - Proxy to Supabase Auth
+   - `sign_in(email, password)` - Proxy to Supabase Auth
+   - `sign_out(access_token)` - Proxy to Supabase Auth
+   - `get_user(access_token)` - Get user from Supabase
+   - `refresh_session(refresh_token)` - Refresh tokens
+   - `reset_password(email)` - Send password reset email
+   - `update_password(access_token, new_password)` - Change password
+3. Create `app/api/v1/endpoints/auth.py`:
+   - `POST /api/v1/auth/register` - Proxy signup to Supabase
+   - `POST /api/v1/auth/login` - Proxy signin to Supabase
+   - `POST /api/v1/auth/logout` - Proxy signout to Supabase
+   - `POST /api/v1/auth/refresh` - Proxy token refresh
+   - `GET /api/v1/auth/me` - Get current user via Supabase
+   - `POST /api/v1/auth/password/reset` - Request password reset
+   - `POST /api/v1/auth/password/change` - Change password
+4. Update `app/services/storage.py`:
+   - Keep using Supabase Storage
+   - Ensure all operations use service role key
+   - Add download endpoint for proxying file downloads
+5. Update `.env.example`:
+   - Keep `SUPABASE_URL`
+   - Add `SUPABASE_SERVICE_ROLE_KEY` (for admin operations)
+   - Remove any anon key references
+
+#### Frontend (`/web`)
+1. Remove Supabase SDK dependencies:
+   - `@supabase/supabase-js`
+   - `@supabase/ssr`
+2. Delete `lib/supabase/` folder
+3. Create `lib/auth/`:
+   - `client.ts` - Auth API client (calls backend)
+   - `context.tsx` - AuthContext with user state
+   - `hooks.ts` - useAuth, useUser hooks
+4. Update `middleware.ts`:
+   - Check for auth token in cookie
+   - Redirect to login if not authenticated
+5. Update `lib/api/client.ts`:
+   - Add access token to all requests
+   - Handle token refresh automatically
+6. Update form components:
+   - `LoginForm.tsx` - Call backend `/api/v1/auth/login`
+   - `SignupForm.tsx` - Call backend `/api/v1/auth/register`
+7. Update `.env.local.example`:
+   - Remove all `NEXT_PUBLIC_SUPABASE_*` variables
+   - Only keep `NEXT_PUBLIC_API_URL`
+
+### Output Atteso
+- Auth proxied through backend to Supabase Auth
+- Storage proxied through backend to Supabase Storage
+- No Supabase SDK in frontend
+- Supabase credentials only in backend
+
+### Criteri di Accettazione
+- [ ] Registration works via backend API (proxied to Supabase)
+- [ ] Login returns tokens from Supabase (via backend)
+- [ ] Dashboard routes protected with token validation
+- [ ] Token refresh works via backend proxy
+- [ ] Document upload works (proxied to Supabase Storage)
+- [ ] Document download works (proxied from Supabase Storage)
+- [ ] No Supabase SDK imports in frontend code
+- [ ] No `NEXT_PUBLIC_SUPABASE_*` variables in frontend
+
+### Test
+```bash
+# Backend
+curl -X POST http://localhost:8000/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@test.com", "password": "Test1234!", "name": "Test"}'
+# Must return Supabase user + tokens
+
+curl -X POST http://localhost:8000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@test.com", "password": "Test1234!"}'
+# Must return {"access_token": "...", "refresh_token": "...", "user": {...}}
+
+# Frontend
+npm run dev
+# Navigate to /login
+# Login → redirect to dashboard
+# Refresh page → session maintained
+# Verify no Supabase network calls from browser (all go to backend)
 ```
 
 ---
@@ -1519,6 +1667,242 @@ Fix e re-test
 
 ---
 
+# FASE 4: ADMIN PANEL
+
+---
+
+## TASK-25: Admin Backend - Models e API Base
+
+**Obiettivo**: Creare modelli database e API endpoints per l'admin panel.
+**Tempo stimato**: 6 ore
+**Dipendenze**: TASK-02
+
+### Contesto
+Admin panel con single admin creato via migration seed.
+Vedi `project.md` sezione 14 per dettagli completi.
+
+### Istruzioni
+1. Creare modelli in `app/models/`:
+   - `admin.py`: Admin model (email, password_hash, timestamps)
+   - `tier_config.py`: TierConfig model (prezzi e limiti editabili)
+   - `admin_notification.py`: AdminNotification model
+   - `impersonation_session.py`: ImpersonationSession model
+2. Creare migration Alembic per nuove tabelle
+3. Creare seed script per admin iniziale:
+   - Legge `ADMIN_EMAIL` e `ADMIN_PASSWORD` da env
+   - Crea admin se non esiste durante migration
+4. Creare `app/api/v1/endpoints/admin/`:
+   - `auth.py`: POST /admin/login, POST /admin/logout
+   - `dashboard.py`: GET /admin/dashboard (KPIs)
+5. Creare `app/services/admin/`:
+   - `auth_service.py`: Login admin, JWT separato
+   - `kpi_service.py`: Calcolo metriche business/technical
+6. Creare middleware per proteggere routes admin
+7. Aggiornare `.env.example`:
+   - `ADMIN_EMAIL`
+   - `ADMIN_PASSWORD`
+
+### Output Atteso
+- Modelli admin in database
+- Admin creato via migration seed
+- Endpoint login admin funzionante
+- Dashboard KPIs endpoint
+
+### Criteri di Accettazione
+- [ ] Admin creato automaticamente al primo avvio
+- [ ] Login admin con JWT separato da users
+- [ ] Dashboard ritorna MRR, users count, queries today
+- [ ] Routes admin protette da middleware
+
+### Test
+```bash
+# Dopo migration
+curl -X POST http://localhost:8000/api/v1/admin/login \
+  -d '{"email": "admin@fieldops.ai", "password": "xxx"}'
+# Deve ritornare JWT
+
+curl -H "Authorization: Bearer $ADMIN_TOKEN" \
+  http://localhost:8000/api/v1/admin/dashboard
+# Deve ritornare KPIs
+```
+
+---
+
+## TASK-26: Admin Frontend - Dashboard
+
+**Obiettivo**: Creare layout e dashboard admin panel.
+**Tempo stimato**: 6 ore
+**Dipendenze**: TASK-25, TASK-08
+
+### Contesto
+Admin panel su /admin con layout separato dalla dashboard utente.
+Solo light mode, design industriale.
+
+### Istruzioni
+1. Creare route group `app/(admin)/`:
+   - `layout.tsx`: Layout admin con sidebar dedicata
+   - `page.tsx`: Redirect a /admin/dashboard
+   - `login/page.tsx`: Login page admin
+   - `dashboard/page.tsx`: Dashboard KPIs
+2. Creare componenti admin in `components/features/admin/`:
+   - `AdminSidebar.tsx`: Navigation admin
+   - `AdminHeader.tsx`: Header con logout
+   - `KPICard.tsx`: Card metrica singola
+   - `BusinessKPIs.tsx`: Griglia MRR, ARR, Churn, etc.
+   - `TechnicalKPIs.tsx`: Queries, SMS, Errors, etc.
+   - `NotificationBell.tsx`: Badge notifiche admin
+3. Creare middleware Next.js per proteggere /admin/*
+4. Creare `lib/api/admin-client.ts`: API client admin
+5. Implementare:
+   - Login admin separato
+   - Dashboard con refresh automatico (30s)
+   - Badge notifiche non lette
+
+### Output Atteso
+- Login admin funzionante
+- Dashboard con KPIs business + technical
+- Layout admin separato
+
+### Criteri di Accettazione
+- [ ] Login admin su /admin/login
+- [ ] Redirect a login se non autenticato
+- [ ] Dashboard mostra tutti i KPIs
+- [ ] Refresh automatico ogni 30s
+- [ ] Badge notifiche visibile
+
+### Test
+```
+1. Navigare a /admin
+2. Redirect a /admin/login
+3. Login con credenziali admin
+4. Verificare dashboard con KPIs
+5. Verificare badge notifiche
+```
+
+---
+
+## TASK-27: Admin User Management
+
+**Obiettivo**: Implementare gestione utenti e session takeover.
+**Tempo stimato**: 8 ore
+**Dipendenze**: TASK-26
+
+### Contesto
+Admin può vedere, modificare, disabilitare utenti.
+Session takeover permette di vedere dashboard come l'utente.
+
+### Istruzioni
+1. Creare API endpoints backend:
+   - `GET /api/v1/admin/users`: Lista utenti paginata con search
+   - `GET /api/v1/admin/users/:id`: Dettagli utente
+   - `PATCH /api/v1/admin/users/:id`: Modifica tier, quota, status
+   - `DELETE /api/v1/admin/users/:id`: Elimina utente e dati
+   - `POST /api/v1/admin/users/:id/impersonate`: Crea sessione impersonation
+2. Creare pagine frontend:
+   - `app/(admin)/users/page.tsx`: Lista utenti
+   - `app/(admin)/users/[id]/page.tsx`: Dettagli utente
+3. Creare componenti:
+   - `UserTable.tsx`: Tabella utenti con search/filter
+   - `UserDetails.tsx`: Card dettagli utente
+   - `EditUserDialog.tsx`: Modal modifica tier/quota
+   - `DeleteUserDialog.tsx`: Conferma eliminazione
+   - `ImpersonateButton.tsx`: Button session takeover
+4. Implementare session takeover:
+   - Click "Login as User" → API crea sessione
+   - Redirect a dashboard utente
+   - Banner "Impersonating [user]" in alto
+   - Button "Exit" ritorna a admin
+5. Creare `app/(dashboard)/layout.tsx` check per impersonation banner
+
+### Output Atteso
+- Lista utenti con search/filter
+- Modifica utente funzionante
+- Session takeover funzionante
+- Delete con conferma
+
+### Criteri di Accettazione
+- [ ] Lista utenti paginata e searchable
+- [ ] Modifica tier/quota funziona
+- [ ] Delete utente elimina tutti i dati
+- [ ] Session takeover mostra dashboard utente
+- [ ] Banner impersonation visibile
+- [ ] Exit impersonation funziona
+
+### Test
+```
+1. Navigare a /admin/users
+2. Cercare utente per email
+3. Modificare tier → verificare aggiornamento
+4. Click "Login as User"
+5. Verificare banner impersonation
+6. Verificare dashboard utente visibile
+7. Click "Exit" → ritorno a admin
+```
+
+---
+
+## TASK-28: Admin Config e Health Monitoring
+
+**Obiettivo**: Implementare configurazione sistema e monitoring.
+**Tempo stimato**: 6 ore
+**Dipendenze**: TASK-26
+
+### Contesto
+Admin può modificare prezzi tier, vedere status servizi, gestire notifiche.
+
+### Istruzioni
+1. Creare API endpoints backend:
+   - `GET /api/v1/admin/config/tiers`: Lista configurazioni tier
+   - `PUT /api/v1/admin/config/tiers/:tier`: Modifica tier config
+   - `GET /api/v1/admin/config/settings`: Impostazioni sistema
+   - `PUT /api/v1/admin/config/settings`: Modifica impostazioni
+   - `GET /api/v1/admin/health`: Status servizi
+   - `GET /api/v1/admin/logs`: Application logs (last 24h)
+   - `GET /api/v1/admin/notifications`: Lista notifiche
+   - `PATCH /api/v1/admin/notifications/:id`: Dismiss notifica
+2. Creare `app/services/admin/`:
+   - `health_service.py`: Check Qdrant, Twilio, LLMs, DB
+   - `notification_service.py`: Crea/dismiss notifiche
+3. Creare pagine frontend:
+   - `app/(admin)/config/page.tsx`: Configurazione tier
+   - `app/(admin)/health/page.tsx`: Status servizi
+   - `app/(admin)/notifications/page.tsx`: Centro notifiche
+4. Creare componenti:
+   - `TierConfigTable.tsx`: Tabella tier editabile
+   - `TierEditDialog.tsx`: Modal modifica prezzi/limiti
+   - `ServiceStatusCard.tsx`: Card status singolo servizio
+   - `LogViewer.tsx`: Viewer logs scrollable
+   - `NotificationList.tsx`: Lista notifiche dismissabili
+5. Implementare background job per generare notifiche:
+   - Check Twilio balance ogni ora
+   - Check error rate ogni 15 min
+   - Notifica su payment failed
+
+### Output Atteso
+- Configurazione tier editabile
+- Health monitoring funzionante
+- Sistema notifiche admin
+
+### Criteri di Accettazione
+- [ ] Modifica prezzi tier da admin
+- [ ] Status servizi visibile (green/yellow/red)
+- [ ] Logs visibili con scroll infinito
+- [ ] Notifiche generate automaticamente
+- [ ] Dismiss notifica funziona
+- [ ] Badge aggiornato in real-time
+
+### Test
+```
+1. Navigare a /admin/config
+2. Modificare prezzo tier Basic → verificare salvataggio
+3. Navigare a /admin/health
+4. Verificare status Qdrant, Twilio, DB
+5. Navigare a /admin/notifications
+6. Verificare lista e dismiss
+```
+
+---
+
 # RIEPILOGO TASK
 
 | Task | Titolo | Ore | Dipendenze |
@@ -1547,8 +1931,12 @@ Fix e re-test
 | 22 | Deploy Backend | 4 | 01-07 |
 | 23 | Deploy Frontend | 4 | 08-21 |
 | 24 | Testing E2E e Go Live | 8 | 22, 23 |
+| 25 | Admin Backend - Models e API | 6 | 02 |
+| 26 | Admin Frontend - Dashboard | 6 | 25, 08 |
+| 27 | Admin User Management | 8 | 26 |
+| 28 | Admin Config & Health | 6 | 26 |
 
-**Totale: ~120 ore (~3 settimane full-time)**
+**Totale: ~146 ore (~4 settimane full-time)**
 
 ---
 
@@ -1558,8 +1946,10 @@ Fix e re-test
 TASK-01 (Backend Setup)
     ├── TASK-02 (Database) ──┬── TASK-05 (Doc Processing) ──┐
     │                        │                               │
-    ├── TASK-03 (Qdrant) ────┤                               │
-    │                        │                               │
+    │                        └── TASK-25 (Admin Backend) ────┼──┐
+    │                                                        │  │
+    ├── TASK-03 (Qdrant) ────┬───────────────────────────────┤  │
+    │                        │                               │  │
     └── TASK-04 (Agent) ─────┴── TASK-06 (Twilio) ──── TASK-07 (Welcome/Memory)
                                       │                       │
                                       └── TASK-18 (Quota) ────┘
@@ -1582,6 +1972,12 @@ TASK-22 (Deploy BE) ────────────────────
 TASK-23 (Deploy FE) ──────────────────────────────────┤
                                                       │
                                                       └── TASK-24 (E2E + Go Live)
+
+ADMIN PANEL (può essere sviluppato in parallelo dopo TASK-02 e TASK-08):
+
+TASK-25 (Admin Backend) ──── TASK-26 (Admin Frontend) ──┬── TASK-27 (User Mgmt)
+                                                        │
+                                                        └── TASK-28 (Config/Health)
 ```
 
 ---

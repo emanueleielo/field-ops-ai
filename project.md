@@ -89,12 +89,14 @@ percentuale_mostrata = (quota_usata_euro / quota_totale_euro) * 100
 │           App Router • Radix UI • React Query • Zod             │
 │                  Deploy: Vercel (free tier)                     │
 │                     URL: app.fieldops.ai                        │
+│              NO Supabase SDK - all calls via Backend            │
 └─────────────────────────────────────────────────────────────────┘
                                  │
                                  ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                    BACKEND (FastAPI + Python 3.13)              │
 │         SQLAlchemy ORM • Alembic • uv • Pydantic v2             │
+│           Supabase Admin SDK (Auth + Storage proxy)             │
 │                    Deploy: Render (free tier)                   │
 │                     API: api.fieldops.ai                        │
 └─────────────────────────────────────────────────────────────────┘
@@ -105,8 +107,7 @@ percentuale_mostrata = (quota_usata_euro / quota_totale_euro) * 100
               │ Supabase │ │  Qdrant  │ │  Twilio  │
               │ Postgres │ │  Cloud   │ │   SMS    │
               │  + Auth  │ │ VectorDB │ │ Gateway  │
-              │  + Store │ │ (free)   │ │          │
-              │  (free)  │ │          │ │          │
+              │+ Storage │ │ (free)   │ │          │
               └──────────┘ └──────────┘ └──────────┘
                                  │
                                  ▼
@@ -141,7 +142,8 @@ percentuale_mostrata = (quota_usata_euro / quota_totale_euro) * 100
 - Radix UI + Tailwind CSS (custom styling)
 - React Query + Context (state management)
 - React Hook Form + Zod (forms)
-- Supabase Auth SDK
+
+> **Note**: No Supabase SDK in frontend. All auth and storage calls go through the backend API (`/api/v1/auth/*`, `/api/v1/documents/*`). Supabase credentials are only stored in the backend.
 
 **Code Quality**:
 - ESLint + Prettier
@@ -262,16 +264,18 @@ POST /webhooks/stripe              # Stripe events
 
 **Fallback Message**: "Info non trovata. Prova a riformulare o contatta supporto tecnico."
 
-### 3.6 Database (Supabase Postgres + SQLAlchemy)
+### 3.6 Database (Postgres + SQLAlchemy)
 
-**Provider**: Supabase (free tier, EU region)
+**Provider**: Supabase Postgres (EU region)
 
-**Auth**: Supabase Auth
+**Auth**: Supabase Auth (via backend proxy)
 - Email + Password
-- Google SSO (OAuth)
+- Google SSO (OAuth) - optional
 - Password: min 8 char + mixed case + number
-- Session timeout: 30 giorni
-- Concurrent sessions: illimitate
+- Session management: handled by Supabase Auth
+- Concurrent sessions: unlimited
+
+> **Note**: Frontend has NO Supabase SDK. All auth calls go through backend API endpoints (`/api/v1/auth/*`). The backend uses Supabase Admin SDK to proxy auth operations. Supabase credentials (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`) are stored only in backend `.env`.
 
 **ORM**: SQLAlchemy con Alembic migrations.
 
@@ -390,6 +394,8 @@ class ActivityLog(Base):
 ```
 /documents/{org_id}/{document_id}/{filename}
 ```
+
+> **Note**: File uploads and downloads are proxied through the backend API (`/api/v1/documents/*`). The backend uses Supabase Admin SDK to interact with Supabase Storage. Frontend never accesses Supabase Storage directly.
 
 ---
 
@@ -559,7 +565,7 @@ Mostrato in: Welcome SMS, Footer dashboard, Terms of Service.
 - Data export: **JSON** format
 - Logging retention: **30 giorni**
 - No IP logging (privacy first)
-- No admin impersonation
+- Admin impersonation available (session takeover for support)
 
 ### 7.3 Legal Pages
 
@@ -738,7 +744,207 @@ No staging environment per MVP.
 
 ---
 
-## 14. Future Roadmap (Post-MVP)
+## 14. Admin Panel
+
+### 14.1 Overview
+
+Single admin panel accessible at `/admin` for platform management.
+
+**Access Control**:
+- Single admin account (owner)
+- Created via database migration seed
+- Credentials from environment variables (`ADMIN_EMAIL`, `ADMIN_PASSWORD`)
+- Admin user stored in separate `admins` table (not in regular users)
+
+### 14.2 Admin Dashboard
+
+**Business KPIs**:
+| Metric | Description |
+|--------|-------------|
+| MRR | Monthly Recurring Revenue |
+| ARR | Annual Recurring Revenue |
+| Active Subscriptions | Count by tier |
+| Churn Rate | Monthly cancellations |
+| Conversion Rate | Trial → Paid |
+| ARPU | Average Revenue Per User |
+
+**Technical Metrics**:
+| Metric | Description |
+|--------|-------------|
+| Queries Today | SMS + Simulator |
+| SMS Sent | Outbound SMS count |
+| LLM Costs | Real-time spending |
+| Error Rate | Failed queries % |
+| Avg Response Time | AI response latency |
+| Storage Used | Total across all orgs |
+
+### 14.3 User Management
+
+**View**:
+- List all users with search/filter
+- User details: org, tier, quota usage, documents count, last active
+- Subscription status and history
+
+**Actions**:
+- Edit user tier manually
+- Adjust quota limits
+- Disable/enable account
+- Delete user and all data
+- **Session Takeover**: Login as user to see their dashboard
+
+**Session Takeover Flow**:
+1. Admin clicks "Login as User" button
+2. System creates temporary session for that user
+3. Admin sees dashboard exactly as user sees it
+4. "Exit Impersonation" button returns to admin panel
+5. All actions during impersonation affect user's data
+
+### 14.4 System Configuration
+
+**Pricing & Tiers** (stored in database, editable via admin):
+```python
+class TierConfig(Base):
+    __tablename__ = "tier_configs"
+
+    id: UUID
+    tier: Enum["basic", "professional", "enterprise"]
+    name: str
+    monthly_price: Decimal
+    yearly_price: Decimal
+    quota_limit_euro: Decimal
+    storage_limit_mb: int | None
+    max_phone_numbers: int
+    max_file_size_mb: int
+    max_pdf_pages: int
+    is_active: bool
+    updated_at: datetime
+```
+
+**System Settings**:
+- SMS templates (welcome, quota warnings)
+- Burst limit (queries/hour)
+- LLM fallback order
+- Maintenance mode toggle
+
+### 14.5 System Health & Monitoring
+
+**Service Status**:
+- Qdrant: Connection status, collection stats
+- Twilio: Account balance, message queue
+- Supabase: Connection status
+- LLM APIs: Anthropic, OpenAI, Google status
+
+**Logs Viewer**:
+- Application logs (last 24h)
+- Error logs with stack traces
+- SMS delivery logs
+- LLM request/response logs (no PII)
+
+### 14.6 In-App Notifications (Admin Alerts)
+
+No email alerts. All notifications displayed in admin panel:
+
+**Critical Alerts** (red badge):
+- Twilio balance < €10
+- LLM API errors > 5%
+- Database connection issues
+- Service outages
+
+**Warnings** (yellow badge):
+- User quota exceeded
+- Payment failed (after retry)
+- High error rate
+
+**Info** (blue badge):
+- New user signup
+- Subscription changes
+- Large document uploads
+
+Alerts stored in `admin_notifications` table, dismissible.
+
+### 14.7 Admin Routes
+
+```
+/admin                    → Admin dashboard
+/admin/users              → User list
+/admin/users/:id          → User details
+/admin/users/:id/impersonate → Session takeover
+/admin/config             → System configuration
+/admin/config/tiers       → Pricing management
+/admin/config/sms         → SMS templates
+/admin/health             → Service status
+/admin/logs               → Logs viewer
+/admin/notifications      → Alerts center
+```
+
+### 14.8 Admin API Endpoints
+
+```
+# Auth
+POST /api/v1/admin/login           → Admin login (separate from user auth)
+POST /api/v1/admin/logout          → Admin logout
+
+# Dashboard
+GET  /api/v1/admin/dashboard       → KPIs and metrics
+
+# Users
+GET  /api/v1/admin/users           → List users (paginated, searchable)
+GET  /api/v1/admin/users/:id       → User details
+PATCH /api/v1/admin/users/:id      → Update user (tier, quota, status)
+DELETE /api/v1/admin/users/:id     → Delete user and data
+POST /api/v1/admin/users/:id/impersonate → Create impersonation session
+
+# Config
+GET  /api/v1/admin/config/tiers    → Get tier configs
+PUT  /api/v1/admin/config/tiers/:tier → Update tier config
+GET  /api/v1/admin/config/settings → Get system settings
+PUT  /api/v1/admin/config/settings → Update system settings
+
+# Health
+GET  /api/v1/admin/health          → Service status
+GET  /api/v1/admin/logs            → Application logs
+
+# Notifications
+GET  /api/v1/admin/notifications   → List alerts
+PATCH /api/v1/admin/notifications/:id → Dismiss alert
+```
+
+### 14.9 Database Models (Admin)
+
+```python
+class Admin(Base):
+    __tablename__ = "admins"
+
+    id: UUID
+    email: str
+    password_hash: str
+    created_at: datetime
+    last_login: datetime
+
+class AdminNotification(Base):
+    __tablename__ = "admin_notifications"
+
+    id: UUID
+    type: Enum["critical", "warning", "info"]
+    title: str
+    message: str
+    data: dict  # Additional context
+    is_read: bool
+    created_at: datetime
+
+class ImpersonationSession(Base):
+    __tablename__ = "impersonation_sessions"
+
+    id: UUID
+    admin_id: UUID
+    user_id: UUID
+    started_at: datetime
+    ended_at: datetime | None
+```
+
+---
+
+## 15. Future Roadmap (Post-MVP)
 
 | Feature | Priority | Version |
 |---------|----------|---------|
@@ -753,12 +959,11 @@ No staging environment per MVP.
 
 ---
 
-## 15. Tech Debt Accepted (v1)
+## 16. Tech Debt Accepted (v1)
 
 - [ ] No real-time indexing status (polling)
 - [ ] No document versioning UI
 - [ ] No team roles/permissions
-- [ ] No audit log dettagliato
 - [ ] No multi-language UI (solo EN)
 - [ ] No response caching
 - [ ] No OCR
@@ -769,7 +974,7 @@ No staging environment per MVP.
 
 ---
 
-## 16. Accounts & Services Checklist
+## 17. Accounts & Services Checklist
 
 | Service | Status | Action Required |
 |---------|--------|-----------------|

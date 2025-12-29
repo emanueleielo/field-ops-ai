@@ -3,10 +3,10 @@
 from typing import BinaryIO
 from uuid import UUID
 
-from supabase import create_client
-from supabase.client import Client
+from app.services.supabase_client import get_supabase_client
 
-from app.config import get_settings
+# Supabase Storage bucket name for documents
+DOCUMENTS_BUCKET = "documents"
 
 
 class StorageError(Exception):
@@ -14,22 +14,39 @@ class StorageError(Exception):
 
 
 class StorageService:
-    """Service for managing file storage in Supabase Storage."""
+    """Service for managing file storage on Supabase Storage.
 
-    BUCKET_NAME = "documents"
+    Files are stored in: documents/{org_id}/{document_id}/{filename}
+    """
 
     def __init__(self) -> None:
-        """Initialize the storage service with Supabase client."""
-        settings = get_settings()
-        if not settings.supabase_url or not settings.supabase_key:
-            raise ValueError("SUPABASE_URL and SUPABASE_KEY must be configured")
+        """Initialize the storage service."""
+        self._client = get_supabase_client()
+        self._ensure_bucket_exists()
 
-        self.client: Client = create_client(
-            settings.supabase_url,
-            settings.supabase_key,
-        )
+    def _ensure_bucket_exists(self) -> None:
+        """Ensure the documents bucket exists, create if not."""
+        try:
+            # Try to get bucket info
+            self._client.storage.get_bucket(DOCUMENTS_BUCKET)
+        except Exception:
+            # Bucket doesn't exist, create it
+            try:
+                self._client.storage.create_bucket(
+                    DOCUMENTS_BUCKET,
+                    options={
+                        "public": False,
+                        "file_size_limit": 52428800,  # 50MB
+                    },
+                )
+            except Exception as e:
+                # Bucket may already exist (race condition) or other error
+                if "already exists" not in str(e).lower():
+                    raise StorageError(f"Failed to create storage bucket: {e}") from e
 
-    def _get_storage_path(self, org_id: UUID, document_id: UUID, filename: str) -> str:
+    def _get_storage_path(
+        self, org_id: UUID, document_id: UUID, filename: str
+    ) -> str:
         """Generate storage path for a file.
 
         Args:
@@ -38,7 +55,7 @@ class StorageService:
             filename: Slugified filename.
 
         Returns:
-            Storage path in format: {org_id}/{document_id}/{filename}
+            Storage path: {org_id}/{document_id}/{filename}
         """
         return f"{org_id}/{document_id}/{filename}"
 
@@ -68,16 +85,12 @@ class StorageService:
         storage_path = self._get_storage_path(org_id, document_id, filename)
 
         try:
-            # Read file content
             file_content = file.read()
-
-            # Upload to Supabase Storage
-            self.client.storage.from_(self.BUCKET_NAME).upload(
+            self._client.storage.from_(DOCUMENTS_BUCKET).upload(
                 path=storage_path,
                 file=file_content,
                 file_options={"content-type": content_type},
             )
-
             return storage_path
         except Exception as e:
             raise StorageError(f"Failed to upload file: {e}") from e
@@ -92,31 +105,32 @@ class StorageService:
             StorageError: If deletion fails.
         """
         try:
-            self.client.storage.from_(self.BUCKET_NAME).remove([storage_path])
+            self._client.storage.from_(DOCUMENTS_BUCKET).remove([storage_path])
         except Exception as e:
             raise StorageError(f"Failed to delete file: {e}") from e
 
-    def get_file_url(self, storage_path: str, expires_in: int = 3600) -> str:
-        """Get a signed URL for accessing a file.
+    def delete_document_folder(self, org_id: UUID, document_id: UUID) -> None:
+        """Delete all files in a document folder.
 
         Args:
-            storage_path: Path of the file.
-            expires_in: URL expiration time in seconds (default: 1 hour).
-
-        Returns:
-            Signed URL for file access.
+            org_id: Organization ID.
+            document_id: Document ID.
 
         Raises:
-            StorageError: If URL generation fails.
+            StorageError: If deletion fails.
         """
+        folder_path = f"{org_id}/{document_id}"
+
         try:
-            response = self.client.storage.from_(self.BUCKET_NAME).create_signed_url(
-                path=storage_path,
-                expires_in=expires_in,
-            )
-            return response["signedURL"]
+            # List all files in the folder
+            files = self._client.storage.from_(DOCUMENTS_BUCKET).list(folder_path)
+
+            if files:
+                # Build full paths for all files
+                file_paths = [f"{folder_path}/{f['name']}" for f in files]
+                self._client.storage.from_(DOCUMENTS_BUCKET).remove(file_paths)
         except Exception as e:
-            raise StorageError(f"Failed to generate signed URL: {e}") from e
+            raise StorageError(f"Failed to delete document folder: {e}") from e
 
     def download_file(self, storage_path: str) -> bytes:
         """Download a file from Supabase Storage.
@@ -131,9 +145,77 @@ class StorageService:
             StorageError: If download fails.
         """
         try:
-            response = self.client.storage.from_(self.BUCKET_NAME).download(
-                path=storage_path,
+            response = self._client.storage.from_(DOCUMENTS_BUCKET).download(
+                storage_path
             )
             return response
         except Exception as e:
             raise StorageError(f"Failed to download file: {e}") from e
+
+    def get_signed_url(self, storage_path: str, expires_in: int = 3600) -> str:
+        """Get a signed URL for temporary file access.
+
+        Args:
+            storage_path: Path of the file.
+            expires_in: URL expiration time in seconds (default 1 hour).
+
+        Returns:
+            Signed URL for file access.
+
+        Raises:
+            StorageError: If URL generation fails.
+        """
+        try:
+            result = self._client.storage.from_(DOCUMENTS_BUCKET).create_signed_url(
+                storage_path, expires_in
+            )
+            return result["signedURL"]
+        except Exception as e:
+            raise StorageError(f"Failed to generate signed URL: {e}") from e
+
+    def file_exists(self, storage_path: str) -> bool:
+        """Check if a file exists in storage.
+
+        Args:
+            storage_path: Path of the file.
+
+        Returns:
+            True if file exists, False otherwise.
+        """
+        try:
+            # Try to get file info by listing the parent folder
+            parts = storage_path.rsplit("/", 1)
+            if len(parts) == 2:
+                folder, filename = parts
+                files = self._client.storage.from_(DOCUMENTS_BUCKET).list(folder)
+                return any(f["name"] == filename for f in files)
+            return False
+        except Exception:
+            return False
+
+    def get_file_size(self, storage_path: str) -> int:
+        """Get the size of a stored file in bytes.
+
+        Args:
+            storage_path: Path of the file.
+
+        Returns:
+            File size in bytes.
+
+        Raises:
+            StorageError: If file doesn't exist or size cannot be determined.
+        """
+        try:
+            parts = storage_path.rsplit("/", 1)
+            if len(parts) == 2:
+                folder, filename = parts
+                files = self._client.storage.from_(DOCUMENTS_BUCKET).list(folder)
+                for f in files:
+                    if f["name"] == filename:
+                        metadata = f.get("metadata", {})
+                        return metadata.get("size", 0)
+            raise StorageError(f"File not found: {storage_path}")
+        except StorageError:
+            raise
+        except Exception as e:
+            raise StorageError(f"Failed to get file size: {e}") from e
